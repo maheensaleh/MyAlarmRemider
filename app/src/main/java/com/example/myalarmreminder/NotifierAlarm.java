@@ -12,38 +12,43 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Parcelable;
 //import android.support.v4.app.NotificationCompat;
 
 import androidx.core.app.NotificationCompat;
 
 import java.util.Date;
 
+import static android.app.Notification.EXTRA_NOTIFICATION_ID;
+
 public class NotifierAlarm extends BroadcastReceiver {
 
 //    private AppDatabase appDatabase;
+    public MediaPlayer mp;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
 
         ///
-        Uri tune = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        MediaPlayer mp = MediaPlayer.create(context.getApplicationContext(), tune);
-        mp.start();
+//        Uri tune = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+//        mp = MediaPlayer.create(context.getApplicationContext(), tune);
+//        mp.start();
+        Player.getInstance(context).playMusic();
 
-//        appDatabase = AppDatabase.geAppdatabase(context.getApplicationContext());
-//        RoomDAO roomDAO = appDatabase.getRoomDAO();
+
+
         Reminders reminder = new Reminders();
         reminder.setMessage(intent.getStringExtra("Message"));
         reminder.setRemindDate(new Date(intent.getStringExtra("RemindDate")));
         reminder.setId(intent.getIntExtra("id",0));
-//        roomDAO.Delete(reminder);
-//        AppDatabase.destroyInstance();
+
 
         Uri alarmsound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
 
         Intent intent1 = new Intent(context,MainActivity.class);
+//        intent1.putExtra("mp", (Parcelable) mp);
         intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
@@ -51,7 +56,6 @@ public class NotifierAlarm extends BroadcastReceiver {
         taskStackBuilder.addNextIntent(intent1);
 
         PendingIntent intent2 = taskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
         NotificationChannel channel = null;

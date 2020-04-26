@@ -3,6 +3,7 @@ package com.example.myalarmreminder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 
@@ -29,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+//import
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -51,6 +53,17 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+//    NotifierAlarm.mp
+//
+//    try{
+//
+////      Intent getter = getIntent();
+////      MediaPlayer player = getter.getExtras();
+//
+//    } catch (Exception e){
+//
+//    }
 
 //    appDatabase = AppDatabase.geAppdatabase(MainPage.this);
 
@@ -171,4 +184,9 @@ public class MainActivity extends AppCompatActivity {
 //    recyclerView.setAdapter(adapter);
 
   }
+
+    public void stop_alarm(View view) {
+        Player.getInstance(getApplicationContext().getApplicationContext()).stopMusic();
+
+    }
 }
