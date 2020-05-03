@@ -43,33 +43,20 @@ public class MainActivity extends AppCompatActivity {
 
   private FloatingActionButton add;
   private Dialog dialog;
-//  private AppDatabase appDatabase;
   private RecyclerView recyclerView;
-//  private AdapterReminders adapter;
   private List<CalendarContract.Reminders> temp;
   private TextView empty;
+  Date remind_date ;  // remind Date variable to save in database
+  Date original_date ;  // original Date variable to save in database
+
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-//    NotifierAlarm.mp
-//
-//    try{
-//
-////      Intent getter = getIntent();
-////      MediaPlayer player = getter.getExtras();
-//
-//    } catch (Exception e){
-//
-//    }
-
-//    appDatabase = AppDatabase.geAppdatabase(MainPage.this);
-
     add = findViewById(R.id.floatingButton);
-//    empty = findViewById(R.id.empty);
-
     add.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -77,11 +64,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-//    recyclerView = findViewById(R.id.recyclerView);
-//    recyclerView.setHasFixedSize(true);
-//    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainPage.this);
-//    recyclerView.setLayoutManager(linearLayoutManager);
-//    setItemsInRecyclerView();
+;
 
   }
 
@@ -97,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
     final EditText message = dialog.findViewById(R.id.message);
 
 
+
+    // -------------------------------   setting date and time picker together -------------------------//
     final Calendar newCalender = Calendar.getInstance();
     select.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -114,38 +99,53 @@ public class MainActivity extends AppCompatActivity {
                 newDate.set(year,month,dayOfMonth,hourOfDay,minute,0);
                 Calendar tem = Calendar.getInstance();
                 Log.w("TIME",System.currentTimeMillis()+"");
-                if(newDate.getTimeInMillis()-tem.getTimeInMillis()>0)
+                if(newDate.getTimeInMillis()-tem.getTimeInMillis()>0){
+
                   textView.setText(newDate.getTime().toString());
-                else
+
+                  original_date = newDate.getTime();  // original  date and time saved in Date variable
+
+
+                  Calendar prev_date = Calendar.getInstance(); // calendar to save previuos date
+                  prev_date.setTime(original_date); //
+                  prev_date.add(newDate.DATE,-1); //get previous date from  original date
+                  remind_date = prev_date.getTime();
+
+                }
+
+                else{
                   Toast.makeText(MainActivity.this,"Invalid time",Toast.LENGTH_SHORT).show();
 
-              }
+              }}
             },newTime.get(Calendar.HOUR_OF_DAY),newTime.get(Calendar.MINUTE),true);
             time.show();
 
           }
         },newCalender.get(Calendar.YEAR),newCalender.get(Calendar.MONTH),newCalender.get(Calendar.DAY_OF_MONTH));
-
         dialog.getDatePicker().setMinDate(System.currentTimeMillis());
         dialog.show();
+
+
+        //
 
       }
     });
 
 
+
+    //setting alarm
     add.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+//        alarm date and time:
+        System.out.println("orginal date is "+original_date);
+        System.out.println("remind date is "+remind_date);
 
-//        RoomDAO roomDAO = appDatabase.getRoomDAO();
         Reminders reminders = new Reminders();
         reminders.setMessage(message.getText().toString().trim());
         Date remind = new Date(textView.getText().toString().trim());
         reminders.setRemindDate(remind);
-//        roomDAO.Insert(reminders);
-//        List<Reminders> l = roomDAO.getAll();
-//        reminders = l.get(l.size()-1);
-//        Log.e("ID chahiye",reminders.getId()+"");
+
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+5:30"));
         calendar.setTime(remind);
@@ -155,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("RemindDate",reminders.getRemindDate().toString());
         intent.putExtra("id",reminders.getId());
         PendingIntent intent1 = PendingIntent.getBroadcast(MainActivity.this,reminders.getId(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),intent1);
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+//        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),intent1);
 
         Toast.makeText(MainActivity.this,"Inserted Successfully",Toast.LENGTH_SHORT).show();
         setItemsInRecyclerView();
@@ -174,19 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
   public void setItemsInRecyclerView(){
 
-//    RoomDAO dao = appDatabase.getRoomDAO();
-//    temp = dao.orderThetable();
-//    if(temp.size()>0) {
-//      empty.setVisibility(View.INVISIBLE);
-//      recyclerView.setVisibility(View.VISIBLE);
-//    }
-//    adapter = new AdapterReminders(temp);
-//    recyclerView.setAdapter(adapter);
-
   }
 
-    public void stop_alarm(View view) {
-        Player.getInstance(getApplicationContext().getApplicationContext()).stopMusic();
 
-    }
 }

@@ -47,12 +47,13 @@ public class NotifierAlarm extends BroadcastReceiver {
         Uri alarmsound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
 
-        Intent intent1 = new Intent(context,MainActivity.class);
-//        intent1.putExtra("mp", (Parcelable) mp);
+        Intent intent1 = new Intent(context,AlarmStop.class);
+        intent1.putExtra("title",intent.getStringExtra("Message"));
+//
         intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-        taskStackBuilder.addParentStack(MainActivity.class);
+        taskStackBuilder.addParentStack(AlarmStop.class);
         taskStackBuilder.addNextIntent(intent1);
 
         PendingIntent intent2 = taskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
